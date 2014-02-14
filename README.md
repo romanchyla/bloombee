@@ -19,14 +19,19 @@ dev setup
 
 If you don't have node.js, do this (or equivalent of your distribution):
 
+```bash
   $ sudo apt-get install node npm grunt-cli
-
+```
 
 Now (inside the project), run:
-  
-  $ npm install
-  $ grunt setup 
 
+```bash
+  # install the dependencies from package.json
+  $ npm install
+  
+  # build the project
+  $ grunt setup 
+```
 
 And you are ready to go!
 
@@ -42,7 +47,8 @@ I have discovered that none of the boilerplate generators are perfect (surprise 
 
 
 This is the current file/folder structure, with short explanation:  
-  
+
+```bash
 /bloombee.
    |-package.json
    |-bower.json
@@ -65,7 +71,7 @@ This is the current file/folder structure, with short explanation:
    |---mocha
    |-----apps
    |-------discovery
-  
+``` 
 
 Because npm (browserify) is not yet ready to package libraries for client development, we are using bower. It works great, but mind the following:
 
@@ -74,22 +80,20 @@ Because npm (browserify) is not yet ready to package libraries for client develo
   - package.json: lists libraries that are necessary for development
          (e.g. grunt, webserver) and for server-side
          
-         
-Gruntfile.json
-  - various instructions and commands, run: grunt --help
-  
-  
-/bower_components
-/node_modules
 
-  - these will be created once you setup your environment
-  
-/dist
+Contents
+========
 
-  - here we export the deployment-ready version of the code (compacted,
-    minified, ready to be included into flask)
+##### Gruntfile.json
+various instructions and commands, run: grunt --help
+  
+##### /bower_components & /node_modules
+these will be created once you setup your environment
+  
+##### /dist
+here we export the deployment-ready version of the code (compacted, minified, ready to be included into flask)
     
-/src
+##### /src
 
   - ./apps: because we want to develop separate applications (e.g. discovery,
     private libraries) I decided to keep them all here.
@@ -109,10 +113,12 @@ Gruntfile.json
       some mirroring tree just for the static files? Depends on what you
       consider to be a code: templates and css can be viewed as such]
      
-  - ./modules
+  - ```bash
+    ./modules
     ./models
     ./collections
     ./views
+    ```
     
     - these folders should hold the *general, reusable* code that we develop,
       and that we want to reuse inside apps
@@ -120,7 +126,7 @@ Gruntfile.json
   - ./libs: created automatically, when you run grunt setup - contains
     all external dependencies (ie. backbone, requirejs)
     
-/test
+##### /test
  
   - ./mocha
   
@@ -129,7 +135,7 @@ Gruntfile.json
       the standard structure: [framework]/<tree>
       
     - the folder will mirror the code tree, eg.:
-    
+    ```bash
       ./mocha
          |
          /apps
@@ -142,7 +148,7 @@ Gruntfile.json
          /modules
              |
              facets.specs.js
-         
+     ```
     
 
              
