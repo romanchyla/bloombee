@@ -1,0 +1,13 @@
+List of changes, please add new entries at the top (with release version, once
+we have that)
+
+
+
+
+12-02-2014
+
+  - first boiler-plate generated with `yo bbb` command
+  - modified structure, drawing inspiration from:
+    - https://github.com/artsy/ezel
+    - http://12factor.net/
+    - https://github.com/jkat98/benm
