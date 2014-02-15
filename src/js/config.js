@@ -6,14 +6,14 @@ require.config({
     "libs": "../libs",
 
     // Almond is used to lighten the output filesize.
-    "almond": "../libs/bower/almond/almond",
+    "almond": "../libs/almond/almond",
 
     // Opt for Lo-Dash Underscore compatibility build over Underscore.
-    "underscore": "../lib/bower/lodash/dist/lodash.underscore",
+    "underscore": "../libs/lodash/lodash.compat",
 
     // Map remaining vendor dependencies.
-    "jquery": "../libs/bower/jquery/jquery",
-    "backbone": "../libs/bower/backbone/backbone"
+    "jquery": "../libs/jquery/jquery",
+    "backbone": "../libs/backbone/backbone"
   },
 
   shim: {

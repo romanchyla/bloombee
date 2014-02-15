@@ -19,7 +19,8 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-coverage": "~0.1.0",
     "almond": "~0.2.9",
-    "grunt-bower-task": "~0.3.4"
+    "grunt-bower-task": "~0.3.4",
+    "grunt-contrib-requirejs": "~0.4.1"
   },
   "peerDependencies": {
     "bower": "*",

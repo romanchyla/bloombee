@@ -6,16 +6,29 @@ module.exports = function(grunt) {
     
     // Wipe out previous builds and test reporting.
     clean: ["dist/", "test/reports"],
+    
+    // This will install libraries (client-side dependencies)
+    bower: {
+      install: {
+        options: {
+          targetDir: './src/libs'
+        }
+      }
+    },
 
     // Run your source code through JSHint's defaults.
-    jshint: ["src/**/*.js"],
+    jshint: ["src/js/**/*.js"],
 
     // This task uses James Burke's excellent r.js AMD builder to take all
     // modules and concatenate them into a single file.
     requirejs: {
+      
+      baseUrl: 'src/js',
+      mainConfigFile: "src/js/config.js",
+      
       release: {
         options: {
-          mainConfigFile: "src/config.js",
+          mainConfigFile: "src/js/config.js",
           generateSourceMaps: true,
           include: ["main"],
           insertRequire: ["main"],
@@ -32,7 +45,7 @@ module.exports = function(grunt) {
           // Setting the base url to the distribution directory allows the
           // Uglify minification process to correctly map paths for Source
           // Maps.
-          baseUrl: "dist/src",
+          baseUrl: "dist/js",
 
           // Wrap everything in an IIFE.
           wrap: true,
@@ -44,14 +57,7 @@ module.exports = function(grunt) {
       }
     },
     
-    // This will install libraries
-    bower: {
-      install: {
-        options: {
-          targetDir: './src/libs'
-        }
-      }
-    },
+    
 
     // This task simplifies working with CSS inside Backbone Boilerplate
     // projects.  Instead of manually specifying your stylesheets inside the
@@ -62,14 +68,14 @@ module.exports = function(grunt) {
       // development file path.
       "dist/styles.css": {
         // Point this to where your `index.css` file is location.
-        src: "src/styles/index.css",
+        src: "js/styles/index.css",
 
         // The relative path to use for the @imports.
-        paths: ["src/styles"],
+        paths: ["js/styles"],
 
         // Rewrite image paths during release to be relative to the `img`
         // directory.
-        forceRelative: "/src/img/"
+        forceRelative: "/js/img/"
       }
     },
 
@@ -118,10 +124,6 @@ module.exports = function(grunt) {
         files: [
           {
             src: ["src/**"],
-            dest: "dist/"
-          },
-          {
-            src: "libs/**",
             dest: "dist/"
           }
         ]

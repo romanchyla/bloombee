@@ -1,7 +1,13 @@
 List of changes, please add new entries at the top (with release version, once
 we have that)
 
+14-02-14
 
+Changed folder structure:
+  - moved src/libs into libs because jshint and requirejs were analyzing
+    files that we don't need to analyze
+  - renamed src into js because when the project is exported into ./dist
+    we don't need to rename anything
 
 
 12-02-2014
