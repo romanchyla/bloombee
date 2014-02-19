@@ -19,10 +19,10 @@
   // Set the application endpoint and load the configuration.
   require.config({
     paths: {
-      underscore: "../libs/bower/lodash/dist/lodash.underscore"
+      underscore: "../src/libs/lodash/lodash.compat.js"
     },
 
-    baseUrl: "base/src"
+    baseUrl: "src/js"
   });
 
   require([

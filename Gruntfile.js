@@ -23,16 +23,18 @@ module.exports = function(grunt) {
     // modules and concatenate them into a single file.
     requirejs: {
       
-      baseUrl: 'src/js',
-      mainConfigFile: "src/js/config.js",
+      
+      options: {
+        //baseUrl: 'src/js',
+        mainConfigFile: "src/js/config.js",
+        dir: 'dist',
+        appDir:'dist'
+      },
       
       release: {
         options: {
-          mainConfigFile: "src/js/config.js",
           generateSourceMaps: true,
-          include: ["main"],
-          insertRequire: ["main"],
-          out: "dist/source.min.js",
+          
           optimize: "uglify2",
 
           // Since we bootstrap with nested `require` calls this option allows
@@ -41,11 +43,6 @@ module.exports = function(grunt) {
 
           // Include a minimal AMD implementation shim.
           name: "almond",
-
-          // Setting the base url to the distribution directory allows the
-          // Uglify minification process to correctly map paths for Source
-          // Maps.
-          baseUrl: "dist/js",
 
           // Wrap everything in an IIFE.
           wrap: true,
@@ -57,33 +54,18 @@ module.exports = function(grunt) {
       }
     },
     
-    
-
-    // This task simplifies working with CSS inside Backbone Boilerplate
-    // projects.  Instead of manually specifying your stylesheets inside the
-    // HTML, you can use `@imports` and this task will concatenate only those
-    // paths.
-    styles: {
-      // Out the concatenated contents of the following styles into the below
-      // development file path.
-      "dist/styles.css": {
-        // Point this to where your `index.css` file is location.
-        src: "js/styles/index.css",
-
-        // The relative path to use for the @imports.
-        paths: ["js/styles"],
-
-        // Rewrite image paths during release to be relative to the `img`
-        // directory.
-        forceRelative: "/js/img/"
-      }
-    },
 
     // Minfiy the distribution CSS.
     cssmin: {
-      release: {
+      combine: {
+        // without this the imports are simply eaten (though css-clean
+        // added support for imports, it doesn't seem to work
+        options: {
+           processImport: false
+        },
         files: {
-          "dist/styles.min.css": ["dist/styles.css"]
+          //cwd: 'dist',
+          "dist/css/style.min.css" : ["src/css/*.css", "src/js/apps/**/css/*.css"]
         }
       }
     },
@@ -123,8 +105,13 @@ module.exports = function(grunt) {
       release: {
         files: [
           {
-            src: ["src/**"],
-            dest: "dist/"
+            expand: true,
+            src: ["./src/**"],
+            dest: "dist/",
+            rename: function(dest,src) {
+              //grunt.verbose.writeln("src" + src);
+              return dest + src.replace('/src/', '/');
+            }
           }
         ]
       }
@@ -164,7 +151,7 @@ module.exports = function(grunt) {
         ],
 
         preprocessors: {
-          "src/**/*.js": "coverage"
+          "src/js/**/*.js": "coverage"
         },
 
         coverageReporter: {
@@ -179,18 +166,15 @@ module.exports = function(grunt) {
           "test/runner.js",
 
           {
-            pattern: "src/**/*.*",
+            pattern: "src/js/**/*.*",
             included: false
           },
           // Derives test framework from Karma configuration.
           {
             pattern: "test/<%= karma.options.frameworks[0] %>/**/*.spec.js",
             included: false
-          },
-          {
-            pattern: "libs/**/*.js",
-            included: false
           }
+          
         ]
       },
 
@@ -221,7 +205,7 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: 'src/**/*.js',
+        src: 'src/js/**/*.js',
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     }
@@ -234,6 +218,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-compress");
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   // Third-party tasks.
   grunt.loadNpmTasks("grunt-karma");
@@ -242,8 +227,10 @@ module.exports = function(grunt) {
 
   // Grunt BBB tasks.
   grunt.loadNpmTasks("grunt-bbb-server");
-  grunt.loadNpmTasks("grunt-bbb-requirejs");
-  grunt.loadNpmTasks("grunt-bbb-styles");
+  
+  // deactivated since the code is 'silly' it allows
+  // only for hardcoded targets
+  // grunt.loadNpmTasks("grunt-bbb-styles");
   
   // Bower tasks
   grunt.loadNpmTasks('grunt-bower-task');
@@ -261,7 +248,6 @@ module.exports = function(grunt) {
     "processhtml",
     "copy",
     "requirejs",
-    "styles",
     "cssmin",
   ]);
 };

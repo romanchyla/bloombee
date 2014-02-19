@@ -1,19 +1,22 @@
 // This is the runtime configuration file.  It complements the Gruntfile.js by
 // supplementing shared properties.
+console.log('loading config');
+
 require.config({
   paths: {
     // Make vendor easier to access.
-    "libs": "../libs",
+    "libs": "../../../libs",
+    "js": "../../../js",
 
     // Almond is used to lighten the output filesize.
-    "almond": "../libs/almond/almond",
+    "almond": "../../../libs/almond/almond",
 
     // Opt for Lo-Dash Underscore compatibility build over Underscore.
-    "underscore": "../libs/lodash/lodash.compat",
+    "underscore": "../../../libs/lodash/lodash.compat",
 
     // Map remaining vendor dependencies.
-    "jquery": "../libs/jquery/jquery",
-    "backbone": "../libs/backbone/backbone"
+    "jquery": "../../../libs/jquery/jquery",
+    "backbone": "../../../libs/backbone/backbone"
   },
 
   shim: {
