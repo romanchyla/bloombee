@@ -45,7 +45,7 @@ module.exports = function(grunt) {
           findNestedDependencies: true,
 
           // Include a minimal AMD implementation shim.
-          //name: "almond",
+          name: "../libs/almond/almond",
 
           // Wrap everything in an IIFE.
           wrap: true,
