@@ -164,8 +164,8 @@ module.exports = function(grunt) {
 
         files: [
           // You can optionally remove this or swap out for a different expect.
-          "libs/bower/chai/chai.js",
-          "libs/bower/requirejs/require.js",
+          "src/libs/chai/chai.js",
+          "src/libs/requirejs/require.js",
           "test/runner.js",
 
           {
