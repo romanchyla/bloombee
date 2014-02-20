@@ -20,8 +20,13 @@ define(function(require, exports, module) {
   app.root = "/js/apps/example";
   
   var hello = require('js/modules/hello');
-  hello.showName('world!');
   
   console.log('App is running!');
+  
+  app.hello = function(name) {
+      hello.showName('#example-main', name);
+    };
+  
+  app.hello('world!');
   
 });
