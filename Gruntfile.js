@@ -18,17 +18,20 @@ module.exports = function(grunt) {
 
     // Run your source code through JSHint's defaults.
     jshint: ["src/js/**/*.js"],
+    
 
     // This task uses James Burke's excellent r.js AMD builder to take all
     // modules and concatenate them into a single file.
     requirejs: {
       
+      baseUrl: 'src/js', // this is needed just for the 'stupid' list task
       
       options: {
         //baseUrl: 'src/js',
-        mainConfigFile: "src/js/config.js",
-        dir: 'dist',
-        appDir:'dist'
+        //mainConfigFile: "src/js/config.js",
+        dir: 'dist/js',
+        baseUrl: 'src/js'
+        //appDir:'src/js'
       },
       
       release: {
@@ -42,7 +45,7 @@ module.exports = function(grunt) {
           findNestedDependencies: true,
 
           // Include a minimal AMD implementation shim.
-          name: "almond",
+          //name: "almond",
 
           // Wrap everything in an IIFE.
           wrap: true,
@@ -211,6 +214,10 @@ module.exports = function(grunt) {
     }
   });
 
+  // Grunt BBB tasks.
+  grunt.loadNpmTasks("grunt-bbb-server");
+  grunt.loadNpmTasks("grunt-bbb-requirejs"); // we use 'list' target only, requirejs will get overriden
+  
   // Grunt contribution tasks.
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-jshint");
@@ -225,8 +232,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-karma-coveralls");
   grunt.loadNpmTasks("grunt-processhtml");
 
-  // Grunt BBB tasks.
-  grunt.loadNpmTasks("grunt-bbb-server");
+  
   
   // deactivated since the code is 'silly' it allows
   // only for hardcoded targets
