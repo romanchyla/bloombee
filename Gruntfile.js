@@ -1,11 +1,11 @@
 module.exports = function(grunt) {
-  "use strict";
+  'use strict';
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     
     // Wipe out previous builds and test reporting.
-    clean: ["dist/", "test/reports"],
+    clean: ['dist/', 'test/reports'],
     
     // This will install libraries (client-side dependencies)
     bower: {
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     },
 
     // Run your source code through JSHint's defaults.
-    jshint: ["src/js/**/*.js"],
+    jshint: ['src/js/**/*.js'],
     
 
     // This task uses James Burke's excellent r.js AMD builder to take all
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
       
       options: {
         //baseUrl: 'src/js',
-        //mainConfigFile: "src/js/config.js",
+        //mainConfigFile: 'src/js/config.js',
         dir: 'dist/js',
         baseUrl: 'src/js'
         //appDir:'src/js'
@@ -38,14 +38,14 @@ module.exports = function(grunt) {
         options: {
           generateSourceMaps: true,
           
-          optimize: "uglify2",
+          optimize: 'uglify2',
 
           // Since we bootstrap with nested `require` calls this option allows
           // R.js to find them.
           findNestedDependencies: true,
 
           // Include a minimal AMD implementation shim.
-          name: "../libs/almond/almond",
+          name: '../libs/almond/almond',
 
           // Wrap everything in an IIFE.
           wrap: true,
@@ -58,7 +58,9 @@ module.exports = function(grunt) {
     },
     
 
-    // Minfiy the distribution CSS.
+    // Minfiy the distribution CSS. This is of limited value to us, for two
+    // reasons: 1) css imports are not working 2) the task doesn't seem to
+    // be able to discover css files; i have filed a github issue/question
     cssmin: {
       combine: {
         // without this the imports are simply eaten (though css-clean
@@ -68,14 +70,27 @@ module.exports = function(grunt) {
         },
         files: {
           //cwd: 'dist',
-          "dist/css/style.min.css" : ["src/css/*.css", "src/js/apps/**/css/*.css"]
+          'dist/css/style.min.css' : ['src/css/*.css', 'src/js/apps/**/css/*.css']
+        }
+      },
+      minify: {
+        options: {
+          mode: 'gzip',
+          report: 'min'
+        },
+        files: {
+          //expand: true,
+          //cwd: './dist/libs/backbone/docs/public/stylesheets/',
+          'dist/foo': ['./dist/src/**/*.css', '!./dist/src/**/*.min.css'],
+          //dest: 'dist/',
+          //ext: '.min.css'
         }
       }
     },
 
     server: {
       options: {
-        host: "0.0.0.0",
+        host: '0.0.0.0',
         port: 8000
       },
 
@@ -83,7 +98,7 @@ module.exports = function(grunt) {
 
       release: {
         options: {
-          prefix: "dist"
+          prefix: 'dist'
         }
       },
 
@@ -95,24 +110,30 @@ module.exports = function(grunt) {
       }
     },
 
+    // modify the html based on the instructions inside the html code
+    // this can be useful to modify links to css, minified version 
+    // of javascript etc...
     processhtml: {
       release: {
         files: {
-          "dist/index.html": ["index.html"]
+          'dist/index.html': ['dist/index.html'], // use dist as source
+          'dist/todo.html': ['dist/todo.html'],
+          'dist/example.html': ['dist/example.html']
         }
       }
     },
 
-    // Move libs and src logic during a build.
+    // copy files from src into the distribution folder (but remove
+    // src top level)
     copy: {
       release: {
         files: [
           {
             expand: true,
-            src: ["./src/**"],
-            dest: "dist/",
+            src: ['./src/**'],
+            dest: 'dist/',
             rename: function(dest,src) {
-              //grunt.verbose.writeln("src" + src);
+              //grunt.verbose.writeln('src' + src);
               return dest + src.replace('/src/', '/');
             }
           }
@@ -120,13 +141,18 @@ module.exports = function(grunt) {
       }
     },
 
+    // compress whatever we have in the dist and 
+    // store it along-side with it (nginx can serve
+    // such content automatically)
     compress: {
       release: {
         options: {
-          archive: "dist/source.min.js.gz"
+          mode: 'gzip'
         },
-
-        files: ["dist/source.min.js"]
+        expand: true,
+        cwd: 'dist/',
+        src: ['**/*.js', '**/*.htm*', '**/*.css'],
+        dest: 'dist/'
       }
     },
 
@@ -139,42 +165,42 @@ module.exports = function(grunt) {
         captureTimeout: 7000,
         autoWatch: true,
 
-        reporters: ["progress", "coverage"],
-        browsers: ["PhantomJS"],
+        reporters: ['progress', 'coverage'],
+        browsers: ['PhantomJS'],
 
         // Change this to the framework you want to use.
-        frameworks: ["mocha"],
+        frameworks: ['mocha'],
 
         plugins: [
-          "karma-jasmine",
-          "karma-mocha",
-          "karma-qunit",
-          "karma-phantomjs-launcher",
-          "karma-coverage"
+          'karma-jasmine',
+          'karma-mocha',
+          'karma-qunit',
+          'karma-phantomjs-launcher',
+          'karma-coverage'
         ],
 
         preprocessors: {
-          "src/js/**/*.js": "coverage"
+          'src/js/**/*.js': 'coverage'
         },
 
         coverageReporter: {
-          type: "lcov",
-          dir: "test/coverage"
+          type: 'lcov',
+          dir: 'test/coverage'
         },
 
         files: [
           // You can optionally remove this or swap out for a different expect.
-          "src/libs/chai/chai.js",
-          "src/libs/requirejs/require.js",
-          "test/runner.js",
+          'src/libs/chai/chai.js',
+          'src/libs/requirejs/require.js',
+          'test/runner.js',
 
           {
-            pattern: "src/js/**/*.*",
+            pattern: 'src/js/**/*.*',
             included: false
           },
           // Derives test framework from Karma configuration.
           {
-            pattern: "test/<%= karma.options.frameworks[0] %>/**/*.spec.js",
+            pattern: 'test/<%= karma.options.frameworks[0] %>/**/*.spec.js',
             included: false
           }
           
@@ -199,13 +225,13 @@ module.exports = function(grunt) {
 
     coveralls: {
       options: {
-        coverage_dir: "test/coverage/PhantomJS 1.9.2 (Linux)/"
+        coverage_dir: 'test/coverage/PhantomJS 1.9.2 (Linux)/'
       }
     },
     
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: "/*! <%= pkg.name %> <%= grunt.template.today('yyyy-mm-dd') %> */\n"
       },
       build: {
         src: 'src/js/**/*.js',
@@ -215,45 +241,46 @@ module.exports = function(grunt) {
   });
 
   // Grunt BBB tasks.
-  grunt.loadNpmTasks("grunt-bbb-server");
-  grunt.loadNpmTasks("grunt-bbb-requirejs"); // we use 'list' target only, requirejs will get overriden
+  //grunt.loadNpmTasks('grunt-bbb-server');
+  grunt.loadNpmTasks('grunt-bbb-requirejs'); // we use 'list' target only, requirejs will get overriden
   
   // Grunt contribution tasks.
-  grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-contrib-cssmin");
-  grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks("grunt-contrib-compress");
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Third-party tasks.
-  grunt.loadNpmTasks("grunt-karma");
-  grunt.loadNpmTasks("grunt-karma-coveralls");
-  grunt.loadNpmTasks("grunt-processhtml");
+  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-karma-coveralls');
+  grunt.loadNpmTasks('grunt-processhtml');
 
   
   
   // deactivated since the code is 'silly' it allows
   // only for hardcoded targets
-  // grunt.loadNpmTasks("grunt-bbb-styles");
+  // grunt.loadNpmTasks('grunt-bbb-styles');
   
   // Bower tasks
   grunt.loadNpmTasks('grunt-bower-task');
 
   // Create an aliased test task.
-  grunt.registerTask("test", ["karma:run"]);
+  grunt.registerTask('test', ['karma:run']);
   
   // Create an aliased test task.
-  grunt.registerTask("setup", 'Sets up the development environment', ["bower"]);
+  grunt.registerTask('setup', 'Sets up the development environment', ['bower']);
 
   // When running the default Grunt command, just lint the code.
-  grunt.registerTask("default", [
-    "clean",
-    "jshint",
-    "processhtml",
-    "copy",
-    "requirejs",
-    "cssmin",
+  grunt.registerTask('default', [
+    'clean',
+    'jshint',
+    'copy',
+    'processhtml',
+    'requirejs',
+    //'cssmin',
   ]);
 };

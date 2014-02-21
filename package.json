@@ -20,7 +20,8 @@
     "karma-coverage": "~0.1.0",
     "almond": "~0.2.9",
     "grunt-bower-task": "~0.3.4",
-    "grunt-contrib-requirejs": "~0.4.1"
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-connect": "~0.6.0"
   },
   "peerDependencies": {
     "bower": "*",
