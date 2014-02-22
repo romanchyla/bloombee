@@ -79,33 +79,68 @@ module.exports = function(grunt) {
           report: 'min'
         },
         files: {
-          //expand: true,
-          //cwd: './dist/libs/backbone/docs/public/stylesheets/',
           'dist/foo': ['./dist/src/**/*.css', '!./dist/src/**/*.min.css'],
-          //dest: 'dist/',
-          //ext: '.min.css'
+        }
+      },
+      test: {
+        options: {
+          mode: 'gzip',
+          report: 'min'
+        },
+        files: {
+          //expand: true,
+          //cwd: 'dist',
+          src: ['./dist/**/*.css', '!./dist/**/*.min.css'],
+          dest: 'dist/',
+          ext: '.min.css'
         }
       }
     },
-
-    server: {
+    
+    // sets up some environment variables; these are important
+    // only for the express task (our webserver)
+    env: {
       options: {
-        host: '0.0.0.0',
-        port: 8000
+        API_ENDPOINT: 'http://adswhy:9000/solr/select',
       },
-
-      development: {},
-
-      release: {
+      dev: {
+        HOMEDIR: 'src',
+        //DEBUG: 'express:*'
+      },
+      prod: {
+        HOMEDIR: 'dist',
+      },
+    },
+    
+    // start a development webserver 
+    express: {
+      
+      options: {
+        // some defaults
+        background:true,
+        delay: 50000
+      },
+      dev: {
         options: {
-          prefix: 'dist'
+          port: 8000,
+          script: 'server.js',
         }
       },
-
-      test: {
+      prod: {
         options: {
-          forever: false,
-          port: 8001
+          port: 8001,
+          script: 'server.js',
+        }
+      }
+    },
+    
+    // this will automatically reload webserver whenever a file is modified
+    watch: {
+      dev: {
+        files:  [ './src/js/**/*.js' ],
+        tasks:  [ 'env:dev', 'express:dev' ],
+        options: {
+          spawn: false // for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions. Without this option specified express won't be reloaded
         }
       }
     },
@@ -240,8 +275,10 @@ module.exports = function(grunt) {
     }
   });
 
+  // Basic environment config
+  grunt.loadNpmTasks('grunt-env');
+  
   // Grunt BBB tasks.
-  //grunt.loadNpmTasks('grunt-bbb-server');
   grunt.loadNpmTasks('grunt-bbb-requirejs'); // we use 'list' target only, requirejs will get overriden
   
   // Grunt contribution tasks.
@@ -253,6 +290,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-express-server');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  
 
   // Third-party tasks.
   grunt.loadNpmTasks('grunt-karma');
@@ -276,6 +316,7 @@ module.exports = function(grunt) {
 
   // When running the default Grunt command, just lint the code.
   grunt.registerTask('default', [
+    'dev:env',
     'clean',
     'jshint',
     'copy',
@@ -283,4 +324,6 @@ module.exports = function(grunt) {
     'requirejs',
     //'cssmin',
   ]);
+  
+  grunt.registerTask('server', [ 'env:dev', 'express:dev', 'watch' ])
 };
